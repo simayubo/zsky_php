@@ -67,7 +67,7 @@ class Index extends Common
 
             $sphinx = new SphinxClient();
             $sphinx->setServer('185.246.85.49', 9312);
-            $sphinx->setSortMode(2, 'requests');
+            $sphinx->setSortMode(1, 'requests');
             $sphinx->setLimits($start, $page_size, 50000);
             $ret = $sphinx->query($keyword);
 
