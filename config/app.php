@@ -144,7 +144,4 @@ return [
     'show_error_msg'         => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '\\app\\common\\handle\\Exception',
-
-    'socket_token' => '6ed0cb08b4be82f7f0ba251e2608e0a1',
-    'socket_url' => 'ws://47.94.91.171:9502/'
 ];
