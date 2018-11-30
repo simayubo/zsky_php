@@ -25,15 +25,4 @@ return [
         // 缓存目录
         'path'  =>  '../runtime/cache/',
     ],
-    'redis'	=>	[
-        'type'	=>	'redis',
-//        'host'	=>	'127.0.0.1',
-        'host'	=>	'47.94.91.171',
-        'port'  =>  6379,
-        'password' => 'simayubo123',
-        // 全局缓存有效期（0为永久有效）
-        'expire'=>  0,
-        // 缓存前缀
-        'prefix'=>  'xs_',
-    ],
 ];
