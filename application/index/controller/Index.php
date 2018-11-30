@@ -118,7 +118,7 @@ class Index extends Common
                 , false, ['path' => '/main-search-kw', 'query' => $page_query]
             );
 
-            return view('list')->assign(['keyword' => $keyword, 'result' => $result, 'type' => $type, 'page' => $page, 'pages' => $pages, 'search_keywords' => $this->getSearchKeywords()]);
+            return view('list')->assign(['keyword' => $keyword, 'result' => $result, 'type' => $type, 'page' => $page, 'pages' => $pages, 'tags' => $this->getTags()]);
         }else{
             $this->redirect('/');
         }
@@ -139,7 +139,7 @@ class Index extends Common
     }
 
     /**
-     * 获取搜索历史关键词
+     * 获取搜索历史关键词(TAGS)（数据来源于数据库搜索历史）
      */
     private function getSearchKeywords(){
         $cache_search_keywords = Cache::get('search_keywords');
@@ -147,9 +147,22 @@ class Index extends Common
             return $cache_search_keywords;
         }else{
             $keywords = Db::name('search_tags')->field('tag')->order('id desc')->select();
-            Cache::set('search_keywords', $keywords);
+            Cache::set('search_keywords', $keywords, 600);
             return $keywords;
         }
+    }
+
+    /**
+     * 自定义标签(标签页或列表右侧展示)，请在.env中定义 SITE_LIKE_TAGS
+     */
+    private function getTags(){
+        $tags = [];
+        $tags_array = explode(',', trim($this->system_config['SITE_LIKE_TAGS'], ','));
+        foreach ($tags_array as $item) {
+            $tags[]['tag'] = $item;
+        }
+
+        return $tags;
     }
 
     /**
@@ -172,5 +185,13 @@ class Index extends Common
                 'today' => $today,
             ];
         }
+    }
+
+    /**
+     * 详情
+     * @param $hash
+     */
+    public function detail($hash){
+
     }
 }
