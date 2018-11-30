@@ -3,6 +3,8 @@ namespace app\index\controller;
 
 use app\common\controller\Common;
 use app\common\traits\Page;
+use Fukuball\Jieba\Finalseg;
+use Fukuball\Jieba\Jieba;
 use Sphinx\SphinxClient;
 use think\Db;
 use think\facade\Cache;
@@ -213,10 +215,15 @@ class Index extends Common
         if (empty($files)){
             $files = [];
         }
+        //jieba分词
+        Jieba::init();
+        Finalseg::init();
+        $jieba_name = Jieba::cut($info['name']);
 
         return view()->assign([
             'info' => $info,
             'files' => $files,
+            'jieba_name' => $jieba_name
         ]);
     }
 
@@ -226,8 +233,9 @@ class Index extends Common
      */
     public function tag(){
 
-
-        return view();
+        return view()->assign([
+            'tags' => $this->getTags()
+        ]);
     }
 
     public function weekhot(){

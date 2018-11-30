@@ -41,9 +41,9 @@
                <div class="detail-panel detail-width">
                     <div class="panel-header">种子标签</div>
                     <div class="panel-body">
-                         {%for fenci in fenci_list%}
-                         <a href="{{url_for('search_results',query=fenci,page=1)}}">{{fenci.encode('utf8')}}</a>&nbsp;&nbsp;
-                         {%endfor%}
+                         {foreach $jieba_name as $item}
+                         <a href="{:url('/main-search-kw-'.$item.'-1')}">{$item}</a>&nbsp;&nbsp;
+                         {/foreach}
                     </div>
                </div>
 
@@ -64,7 +64,7 @@
                <div class="detail-panel detail-width">
                     <div class="panel-header">友情提示</div>
                     <div class="panel-body">
-                         <p>{{hash.name}}</p>
+                         <p>{$info.name}</p>
                          <p>本站已经屏蔽了99%的非法链接，若本链接侵犯你的权利，请联系下面的邮箱进行举报！ </p>
                          <p>亲，你造吗？将网页分享给您的基友，下载的人越多速度越快哦！</p>
                     </div>
@@ -75,8 +75,10 @@
                     </div>
                     <div class="panel-body">
                          <p>
-                              版权投诉/Complain Email：<a class="__cf_email__"  >admin@hao123.Com</a>
+                              版权投诉/Complain Email：<a class="__cf_email__"  >{$system_config.SITE_COMPLAIN_EMAIL}</a>
                          </p>
                     </div>
                </div>
           </div>
+     </div>
+</div>

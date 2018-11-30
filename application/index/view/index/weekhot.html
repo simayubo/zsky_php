@@ -1,7 +1,7 @@
 {include file='common/search' /}
 <div id="sort-bar">
-     <a href="{{url_for('weekhot')}}">周排行</a>
-     <a href="{{url_for('new')}}">最新收录</a>
+     <a href="{:url('/weekhot')}">周排行</a>
+     <a href="{:url('/new')}">最新收录</a>
 </div>
 
 <div id="content">
@@ -11,14 +11,14 @@
                <span>TOP50:</span>
           </div>
           <div class="search-item">
+              加工中
                <ol>
-                    {% for hash in weekhot %}
-                    <li>
-                         <div class="item-title">
-                              <a href="{{url_for('detail',info_hash=hash.info_hash)}}" target="_blank">{{hash.name}}</a><span class="cpill blue-pill">{{hash.requests}}<span>
-</span></span></div>
-                    </li>
-                    {% endfor %}
+
+                    <!--<li>-->
+                         <!--<div class="item-title">-->
+                              <!--<a href="{{url_for('detail',info_hash=hash.info_hash)}}" target="_blank">{{hash.name}}</a><span class="cpill blue-pill">{{hash.requests}}<span>-->
+<!--</span></span></div>-->
+                    <!--</li>-->
                </ol>
           </div>
      </div>

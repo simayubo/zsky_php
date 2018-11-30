@@ -9,21 +9,10 @@
           </div>
           <div class="search-item">
                <div id="tags" class="taglist_tag">
-
-                    {%for tag in tags%}
-                    <span><a href="{{url_for('search_results',query=tag.tag,page=1)}}" title="{{tag.tag}}" target="_blank">{{tag.tag}}</a></span>
-                    {%endfor%}
-
+                    {foreach $tags as $item}
+                    <span><a href="{:url('/main-search-kw-'.$item['tag'].'-1')}" target="_blank">{$item.tag}</a></span>
+                    {/foreach}
                </div>
           </div>
-          <div class="push">
-               <script type="text/javascript">
-                   write_popup();
-               </script>
-          </div>
-
-
-
      </div>
-
 </div>
