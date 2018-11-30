@@ -1,0 +1,44 @@
+{include file='curd/header'}
+<script src="/static/js/layer/laydate/laydate.js"></script>
+<link href="/static/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="/static/admin/css/plugins/chosen/chosen.css" rel="stylesheet">
+
+<link href="/static/js/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<!-- 配置文件 -->
+<script type="text/javascript" src="/static/js/umeditor/umeditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/static/js/umeditor/umeditor.js"></script>
+<script src="/static/admin/js/plugins/chosen/chosen.jquery.js"></script>
+<div>
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            {:htmlspecialchars_decode($form_html)}
+        </div>
+    </div>
+</div>
+<script src="/static/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+    $(function () {
+        $('#sub').click(function () {
+            var index = layer.load(1);
+            var data = $('#form').serialize();
+            $.post("{:url($route.'/save')}", data, function (data) {
+                layer.close(index);
+                if (data.success == true){
+                    layer.msg(data.message, {icon: 6, time: 800}, function () {
+                        parent.window.location.reload()
+                    })
+                }else {
+                    layer.msg(data.message, {icon: 5, time: 1000})
+                }
+            })
+        })
+    })
+</script>
+{include file='curd/footer'}

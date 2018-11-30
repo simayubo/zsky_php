@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>{$system_config.SITE_TITLE}</title>
+    <meta name="keywords" content="{$system_config.SITE_KEYWORDS}"/>
+    <meta name="description" content="{$system_config.SITE_DESCRIPTION}"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link type="text/css" rel="stylesheet" href="__web__/default.css"/>
+    <link rel="shortcut icon" href="__web__/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="__web__/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="__web__/ciliss_apple.jpg"/>
+</head>
+<body>
+<div id="wrapper">
+    <div class="top-bar"><span class="first"><a href="/">种子搜索</a></span>
+        <span><a href="{{url_for('tag')}}">标签</a></span>
+        <span><a href="{{url_for('weekhot')}}">排行</a></span>
+    </div>
+    {__CONTENT__}
+    <div class="push"></div>
+</div>
+<div class="footer">
+    {:htmlspecialchars_decode($system_config.SITE_FOOTER_HTML)}
+</div>
+{:htmlspecialchars_decode($system_config.SITE_FOOTER_JS)}
+</body>
+</html>

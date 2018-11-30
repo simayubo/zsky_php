@@ -1,0 +1,20 @@
+<?php
+
+namespace {%namespace%};
+
+use app\common\controller\{%module%};
+
+class {%className%} extends {%module%} {
+
+    use \app\common\traits\Curd;
+
+    public function model(){ return \app\common\model\{%model%}::class; }
+
+    public function init(){
+        $this->route = '{%route%}';
+        $this->label = '{%label%}';
+        $this->translations = [
+            {%translations%}
+        ];
+    }
+}

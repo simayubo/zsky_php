@@ -1,0 +1,148 @@
+{include file='common/header'}
+<script src="/static/js/layer/laydate/laydate.js"></script>
+<link href="/assets/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/static/js/uploadify/Huploadify.css"/>
+<script type="text/javascript" src="/static/js/uploadify/jquery.Huploadify.js"></script>
+<div>
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="panel blank-panel">
+                <div class="panel-heading">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            {foreach $group as $k => $v}
+                                <li {if $k eq $group_id}class="active"{/if}><a href="{:url('admin/system/config')}?group_id={$k}">{$v.1}</a>
+                            {/foreach}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab-1">
+                            <form method="post" class="form-horizontal" id="form">
+                                <br>
+                                {foreach $list as $k => $v}
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">{$v.config_remark}</label>
+                                    <div class="col-sm-10">
+                                    {switch name="$v.field_type" }
+                                        {case value="input"}
+                                            <input type="text" name="{$v.id}" class="form-control" value="{$v.config_value}">
+                                        {/case}
+                                        {case value="password"}
+                                        <input type="password" name="{$v.id}" class="form-control" value="{$v.config_value}">
+                                        {/case}
+                                        {case value="time"}
+                                        <div class="input-group m-b"><input type="text" name="{$v.id}" class="form-control" id="time-{$v.id}" value="{$v.config_value}"><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>
+                                        <script>laydate({elem: '#time-{$v.id}', format:   'YYYY-MM-DD hh:mm:ss',istime: true});</script>
+                                        {/case}
+                                        {case value="radio"}
+                                            <?php
+                                                $_radio_list = [];
+                                                if(!empty($v['from_data'])){
+                                                    $_array = explode(';', $v['from_data']);
+                                                    foreach($_array as $__k => $__v){
+                                                        $__v = explode(',', $__v);
+                                                        $_radio_list[] = ['value' => $__v[0], 'name' => $__v[1]];
+                                                    }
+                                                }
+                                            ?>
+                                            {foreach $_radio_list as $y}
+                                                <div class="radio i-checks" style="float:left;">
+                                                    <label>
+                                                        <input type="radio" value="{$y.value}" name="{$v.id}" {if $y.value eq $v.config_value} checked {/if}> {$y.name}
+                                                    </label>
+                                                </div>
+                                                                                                                                                    {/foreach}
+                                        {/case}
+                                        {case value="textarea"}
+                                            <textarea style="min-height: 80px;" name="{$v.id}" class="form-control">{$v.config_value}</textarea>
+                                        {/case}
+                                        {case value="file"}
+                                        <input name="{$v.id}" id="{$v.id}" class="form-control" value="{$v.config_value}">
+                                        <div id="upload_{$v.id}"></div>
+                                        <script>
+                                            var index;
+                                            var id = "upload_{$v.id}";
+                                            $('#'+id).Huploadify({
+                                                auto:true,
+                                                fileTypeExts:'*.jpg;*.JPG;*.png;*.PNG;*.gif;*.GIF;',
+                                                multi:false,
+                                                formData:{type:'logo',key2:'vvvv'},
+                                                fileSizeLimit:99999,
+                                                showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+                                                showUploadedSize:true,
+                                                removeTimeout:10,
+                                                uploader:"{:url('admin/system/upLoad')}",
+                                                onUploadStart:function(){
+                                                    index = layer.load(0);
+                                                },
+                                                onInit:function(){
+
+                                                },
+                                                onUploadComplete:function(data, msg){
+                                                    layer.close(index);
+                                                    var msg = $.parseJSON(msg);
+                                                    console.log(msg);
+                                                    if (msg.status === 1){
+                                                        $("#{$v.id}").val(msg.path);
+                                                    }else {
+                                                        layer.alert(msg.msg)
+                                                    }
+                                                },
+                                                onDelete:function(file){
+                                                    console.log('删除的文件：'+file);
+                                                    console.log(file);
+                                                }
+                                            });
+                                        </script>
+                                        {/case}
+                                        {default /}默认情况
+                                    {/switch}
+                                    {notempty name="$v.filed_comment"}
+                                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> {$v.filed_comment}</span>
+                                    {/notempty}
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                {/foreach}
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-primary" type="button" id="sub">保存内容</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/admin/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+    $(function () {
+        $('#sub').click(function () {
+            var index = layer.load(1);
+            var data = $('#form').serialize();
+            $.post("{:url('admin/system/updateconfig')}", data, function (data) {
+                layer.close(index);
+                if (data.success == true){
+                    layer.msg(data.message, {icon: 6, time: 800}, function () {
+                        parent.window.location.reload()
+                    })
+                }else {
+                    layer.msg(data.message, {icon: 5, time: 1000})
+                }
+            })
+        })
+    })
+</script>
+{include file='common/footer'}

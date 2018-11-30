@@ -1,0 +1,171 @@
+{include file='curd/header'}
+<script src="/static/js/layer/laydate/laydate.js"></script>
+<!--<script type="text/javascript" src="__ADMIN__/lib/My97DatePicker/WdatePicker.js"></script>-->
+<div class="wrapper wrapper-content">
+<div class="col-sm-12">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row text-center">
+                {:htmlspecialchars_decode($search_html)}
+                <br/>
+            </div>
+            <div class="row">
+                <div class="col-sm-5 m-b-xs">
+                    <a class="btn btn-default" onclick="javascript:location.reload();" title="刷新">
+                        <i class="glyphicon glyphicon-repeat"></i>
+                    </a>
+                    {if $function.create eq 1}
+                    <button class="btn btn-info" onclick="layeropen('{:url($route.'/create')}', '添加{$label}', '{$model_size.x}', '{$model_size.y}')"><i class="glyphicon glyphicon-plus"></i> 添加</button>
+                    {/if}
+                </div>
+            </div>
+            <div class="table-responsive">
+                {:htmlspecialchars_decode($table)}
+                {if $function.delete eq 1}
+                <div style="padding-left: 20px;">
+                    <label><input type="checkbox" class="all"> 全选 </label> &nbsp;
+                    <button type="button" class="btn btn-danger btn-sm" id="del-all">删除</button>
+                </div>
+                {/if}
+                <div class="page-2 text-center">
+                    {:htmlspecialchars_decode($list->render())} <div class="">(当前页码 {$list_array.current_page}, 共计 {$list_array.last_page} 页, 合 {$list_array.total} 条记录)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    function del(id) {
+        layer.confirm('你确认删除此条记录吗？', {
+            btn: ['确认','取消']
+        }, function(){
+            var index = layer.load(1);
+            $.ajax({
+                type:"post",
+                url:"{:url($route.'/delete')}",
+                data:{id: id},
+                datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+                //成功返回之后调用的函数
+                success:function(data){
+                    layer.close(index);
+                    if (data.success == true){
+                        layer.msg('删除成功', {icon:1, time:800}, function () {
+                            window.location.reload();
+                        })
+                    }else {
+                        layer.msg(data.message, {icon:2, time:1000})
+                    }
+                },
+                //调用出错执行的函数
+                error: function(){
+                    layer.close(index);
+                    layer.alert('系统异常')
+                }
+            });
+        });
+    }
+    function getValues(){
+        var ids = '';
+        $("#list :checkbox").each(function(i){
+            if ($(this).is(":checked")){
+                ids += $(this).val()+',';
+            }
+        });
+        return ids;
+    }
+
+    function ajax(url) {
+        layer.confirm('你确认该操作吗？', {
+            btn: ['确认','取消']
+        }, function() {
+            var index = layer.load(1);
+            $.ajax({
+                type:"post",
+                url:url,
+                data:{},
+                datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+                //成功返回之后调用的函数
+                success:function(data){
+                    layer.close(index);
+                    if (data.success == true){
+                        layer.msg(data.message, {icon:1, time:800}, function () {
+                            window.location.reload();
+                        })
+                    }else {
+                        layer.alert(data.message, {icon:2})
+                    }
+                },
+                //调用出错执行的函数
+                error: function(){
+                    layer.close(index);
+                    layer.alert('系统异常')
+                }
+            });
+        });
+    }
+</script>
+<script>
+    $(function () {
+        //全选或全不选
+        $(".all").click(function(){
+            if(this.checked){
+                $("#list :checkbox").prop("checked", true);
+            }else{
+                $("#list :checkbox").prop("checked", false);
+            }
+        });
+        $('tr').click(function () {
+            $(this).css("background-color", "#e5e5e5").siblings().css("background-color", "");
+        });
+
+        $('#del-all').click(function () {
+            var id = getValues();
+            if (id == ''){
+                layer.msg('请选择需要删除的记录！');
+                return false;
+            }
+            layer.confirm('你确认删除选择的记录吗？', {
+                btn: ['确认','取消']
+            }, function() {
+                var index = layer.load(1);
+                $.ajax({
+                    type: "POST",
+                    url: "{:url($route.'/delete')}",
+                    data: {id: id},
+                    datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+                    //成功返回之后调用的函数
+                    success: function (data) {
+                        layer.close(index);
+                        if (data.success == true){
+                            layer.msg('删除成功', {icon:1, time:800}, function () {
+                                window.location.reload();
+                            })
+                        }else {
+                            layer.msg(data.message, {icon:2, time:1000})
+                        }
+                    },
+                    //调用出错执行的函数
+                    error: function () {
+                        layer.close(index);
+                        layer.alert('系统异常')
+                        //请求出错处理
+                    }
+                });
+            })
+        });
+
+        $('#excelExportData').click(function () {
+            document.getElementById("form").action = "{:url('excelExportData')}";
+            $('#form').attr('target', '_bland');
+            document.getElementById("form").submit();
+        });
+
+        $('#search').click(function () {
+            document.getElementById("form").action = "";
+            $('#form').removeAttr('target');
+            document.getElementById("form").submit();
+        })
+    });
+</script>
+{include file='curd/footer'}

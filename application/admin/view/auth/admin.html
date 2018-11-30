@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <title>{$system_config.SITE_TITLE.config_value} - 后台登录</title>
+    <link rel="shortcut icon" href="__admin__/admin.png" />
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__admin__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__admin__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+    <link href="__admin__/css/animate.css" rel="stylesheet">
+    <link href="__admin__/css/style.css?v=4.1.0" rel="stylesheet">
+    <script src="__admin__/js/jquery.min.js"></script>
+    <style>
+        .cls-content {
+            padding: 50px 15px 15px;
+            padding-top: 20vh;
+            position: relative;
+            color: #647484;
+        }
+        .bg-img ~ .cls-content .panel {
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15);
+        }
+        .cls-content .cls-content-sm {
+            width: 350px;
+        }
+        .cls-content .cls-content-sm, .cls-content .cls-content-lg {
+            width: 95%;
+            min-width: 270px;
+            margin: 0 auto;
+            position: relative;
+            background-color: transparent;
+            border: 0;
+            box-shadow: none;
+        }
+        .panel {
+            border-radius: 0;
+            border: 1px solid #e7ecf3;
+            border-bottom: 1px solid rgba(0,0,0,0.17);
+            margin-bottom: 15px;
+        }
+        .panel {
+            margin-bottom: 20px;
+            background-color: #fff;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        }
+        .cls-container, .cls-container a, .cls-container a:hover, .cls-container a:focus {
+            color: #647484;
+        }
+        .cls-container {
+            background-color: #ecf0f5;
+            text-align: center;
+        }
+        .panel .panel-footer, .panel>:last-child {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .panel .panel-heading, .panel>:first-child {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .panel-body {
+            padding: 15px 20px 25px;
+        }
+        .panel-body {
+            padding: 15px;
+        }
+        .text-lg {
+            font-size: 1.2em;
+        }
+        .text-main, a.text-main:hover, a.text-main:focus {
+            color: #2b425b;
+        }
+        .text-semibold {
+            font-weight: 600;
+        }
+        .bg-img {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: .8;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div id="container" class="" style="width: 350px; margin-left: auto; margin-right: auto;">
+    <div id="github_iframe" class="bg-img"></div>
+    <div class="cls-content">
+        <div class="cls-content-sm panel">
+            <div class="panel-body">
+                <form id="form" method="post">
+                    <div class="panel-body text-center">
+                        <!--<img alt="Profile Picture" style="width: 100px;" class="img-lg img-circle mar-btm" src="{$system_config.SITE_LOGO.config_value}">-->
+                        <!--<br/>-->
+                        <br/>
+                        <p class="text-lg text-semibold mar-no text-main">后台登录</p>
+                        <p class="text-muted"></p>
+                        <p class="text-sm">请勿将您的账号密码告诉他人！ </p>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="username" placeholder="管理员名" autofocus="" id="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="管理员密码" id="password">
+                    </div>
+                    <div class="form-group">
+                        <input type="captcha" class="form-control" name="captcha" placeholder="验证码" style="width: 50%; float: left" id="captcha"> &nbsp;&nbsp;&nbsp;<img src="/captcha.html" alt="captcha" style="cursor: pointer; width: 120px" onclick="this.src=this.src+'?'+Math.random()" id="captcha_img">
+                    </div>
+                    <button class="btn btn-primary btn-block" id="sub" type="button">登录账号</button>
+                    <br>
+                    <span id="error" style="color: red;"></span>
+                </form>
+            </div>
+
+            <!--<div class="pad-all">-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="__admin__/js/bootstrap.min.js?v=3.3.6"></script>
+<!--<script type="text/javascript" color="128,128,128" opacity='0.8' zIndex="-2" count="240" src="__static__/js/canvas-nest.js"></script>-->
+<script>
+    $(function () {
+        $('#sub').click(function () {
+            login();
+        });
+        $('#username, #password, #captcha').keyup(function(event){
+            if(event.keyCode ==13){
+                login();
+            }
+        });
+    })
+</script>
+<script>
+    function login() {
+        var data = $('#form').serialize();
+        var index = layer.load(1);
+        $.ajax({
+            type: "POST",
+            url: "{:url('login')}",
+            data: data,
+            //返回数据的格式
+            datatype: "json",
+            //成功返回之后调用的函数
+            success: function (data) {
+                layer.close(index);
+                if (data.success == true) {
+                    window.location.href = "{:url('admin/index/index')}";
+                } else {
+                    $('#captcha_img').click();
+                    $('#captcha').val('');
+                    $('#error').html(data.message)
+                }
+            },
+            //调用出错执行的函数
+            error: function () {
+                layer.close(index);
+                layer.alert('系统异常')
+                //请求出错处理
+            }
+        });
+    }
+</script>
+<script src="__static__/js/layer/layer.js"></script>
+</body>
+</html>

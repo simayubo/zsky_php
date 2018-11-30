@@ -1,0 +1,25 @@
+<div id="first-content">
+    <div id="center-box-wrapper">
+        <div id="center-box">
+            <div id="center-logo">
+                <a href="/"><img src="{$system_config.SITE_LOGO}" alt="{$system_config.SITE_TITLE}"/></a>
+                <p><h1>{$system_config.SITE_HOME_WELCOME}</h1></p>
+            </div>
+            <div id="search-box">
+                <form id="search-form" action="{:url('/search')}" method="POST">
+                    {:token()}
+                    <input id="search" name="search" placeholder="搜索电影,软件,图片,资料...." type="text" value="" autocomplete="off">
+                    <input class="blue" id="btnSearch" name="submit" type="submit" value="搜索">
+                </form>
+                <div class="info-box">
+                    <ul>
+                        {foreach $keywords as $item}
+                            <li><a href="{:url('/search')}?keyword={$item.keyword}">{$item.keyword}</a></li>
+                        {/foreach}
+                    </ul>
+                    <p style="color:#000000; margin-top:10px;">总收录10000条资源, 今日新增10条</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
