@@ -14,7 +14,7 @@
                 <div class="info-box">
                     <ul>
                         {foreach $keywords as $item}
-                            <li><a href="{:url('/search')}?keyword={$item.keyword}">{$item.keyword}</a></li>
+                            <li><a href="{:url('/main-search-kw-'.$item['keyword'].'-1')}">{$item.keyword}</a></li>
                         {/foreach}
                     </ul>
                     <p style="color:#000000; margin-top:10px;">总收录{$count.total}条资源, 今日新增{$count.today}条</p>

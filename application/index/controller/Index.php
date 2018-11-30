@@ -2,6 +2,7 @@
 namespace app\index\controller;
 
 use app\common\controller\Common;
+use app\common\traits\Page;
 use Sphinx\SphinxClient;
 use think\Db;
 use think\facade\Cache;
@@ -19,13 +20,13 @@ class Index extends Common
 
         return view()->assign([
             'keywords' => $keywords,
-            'count' => $count,
+            'count' => $count
         ]);
     }
 
     public function test(){
-        $total = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
-        var_dump($total);
+        $p =  Page::make([1,2,3,4,5], 20, 1, 100);
+        echo $p->render();
     }
 
     /**
@@ -54,9 +55,8 @@ class Index extends Common
      */
     public function searchResult($keyword, $type = '', $page = 1){
 
-        $result = ['total' => 0, 'sec' => 0, 'error' => '', 'warning' => '', 'list' => []];
         if (!empty($keyword)){
-
+            $result = ['total' => 0, 'sec' => 0, 'error' => '', 'warning' => '', 'list' => []];
             $page_size = 20;
             $start = ($page - 1) * $page_size;
 
@@ -95,18 +95,19 @@ class Index extends Common
                 }
                 $result['list'] = $result_list;
             }
+
+            return view('list')->assign([
+                'keyword' => $keyword,
+                'result' => $result,
+                'type' => $type,
+                'page' => $page,
+                'pages' => Page::make($result['list'], $page_size, $page, $result['total'])
+            ]);
+
+        }else{
+            $this->redirect('/');
         }
-
-        return view('list')->assign([
-            'keyword' => $keyword,
-            'result' => $result,
-            'type' => $type,
-            'page' => $page
-        ]);
     }
-
-
-
 
     /**
      * 获取搜索关键词
