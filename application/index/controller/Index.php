@@ -102,20 +102,25 @@ class Index extends Common
                 $result['list'] = $result_list;
             }
 
+            //分页
+            $page_query = ['keyword' => $keyword];
+            if (!empty($type)){
+                $page_query['type'] = $type;
+            }
+            $pages = Page::make(
+                $result['list'], $page_size, $page, $result['total']
+                , false, [
+                    'path' => '/main-search-kw',
+                    'query' => $page_query
+                ]
+            );
+
             return view('list')->assign([
                 'keyword' => $keyword,
                 'result' => $result,
                 'type' => $type,
                 'page' => $page,
-                'pages' => Page::make(
-                    $result['list'], $page_size, $page, $result['total']
-                    , false, [
-                        'path' => '/main-search-kw',
-                        'query' => [
-                            'keyword' => $keyword
-                        ]
-                    ]
-                )
+                'pages' => $pages
             ]);
 
         }else{
