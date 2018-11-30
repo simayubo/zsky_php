@@ -16,25 +16,19 @@ class Index extends Common
      */
     public function index(){
 //        $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
-
-//        $sphinx = new SphinxClient();
-//        $sphinx->host = '185.246.85.49';
-//        $sphinx->port = '9312';
-
-//        dump($sphinx->status());
-//        dump($sphinx->query('11'));
-
-        $count = Db::name('search_hash')->count();
-        dump($count);
+//        $count = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
+        $total = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count();
+        var_dump($total);
 
 //        return view()->assign([
-//            'keywords' => $keywords
+//            'keywords' => $keywords,
+//            'rows' => $count['rows']
 //        ]);
     }
 
     public function test(){
-        $count = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
-        dump($count);
+        $total = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
+        var_dump($total);
     }
 
     /**
