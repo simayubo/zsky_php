@@ -78,6 +78,7 @@ class Index extends Common
             $ret = $sphinx->query($keyword);
 
             if (empty($ret)){
+                $result['error'] = '服务开小差了，请重试！';
                 $result['list'] = [];
             }else{
                 $result['total'] = $ret['total'];

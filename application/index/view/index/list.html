@@ -14,6 +14,11 @@
 </div>
 <div id="content">
 	<div id="wall">
+		{if !empty($result['error'])}
+		<div class="search-statu">
+			<span style="color: red">{$result.error}</span>
+		</div>
+		{/if}
 		<div class="search-statu">
 			<span>共找到 {$result.total} 条关于 {$keyword} 的结果, 耗时 {$result.sec} 毫秒</span>
 		</div>
