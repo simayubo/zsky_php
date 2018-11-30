@@ -113,7 +113,7 @@ class Index extends Common
      */
     private function getKeywords(){
         $cache_keywords = Cache::get('index_keywords');
-        if (!empty($cache_count)){
+        if (!empty($cache_keywords)){
             return $cache_keywords;
         }else{
             $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
