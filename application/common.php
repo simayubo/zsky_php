@@ -92,3 +92,12 @@ function count_size($bit){
     }
     return round((($bit*100)/100), 2).$type[$i];//floor是取整函数，为了防止出现一串的小数，这里取了两位小数
 }
+
+/**
+ * 关键词过滤
+ */
+function filter_keyword($keyword){
+    $keyword = str_replace([' ', '-', '\\', '(', ')', '@', '|', '~', '&'], '', strip_tags($keyword));
+
+    return $keyword;
+}

@@ -3,6 +3,8 @@
 use \think\facade\Env;
 
 return [
+    '' => '',
+
     'SITE_TITLE' => Env::get('SITE_TITLE', '网站名称'),
     'SITE_LOGO' => Env::get('SITE_LOGO', '/static/web/logo.png'),
     'SITE_LOGO_NAV' => Env::get('SITE_LOGO_NAV', '/static/web/nav_logo.png'),

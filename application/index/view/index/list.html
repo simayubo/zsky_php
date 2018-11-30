@@ -1,9 +1,9 @@
 {include file='common/search' /}
 <div id="sort-bar">
-	<a href="{:url('/main-search-kw-'.$keyword.'-1')}">{if $type == ''}<b>相关度</b>{else}相关度{/if}</a>
-	<a href="{:url('/main-search-kw-'.$keyword.'-length-1')}">{if $type == 'length'}<b>文件大小</b>{else}文件大小{/if}</a>
-	<a href="{:url('/main-search-kw-'.$keyword.'-time-1')}">{if $type == 'time'}<b>创建时间</b>{else}创建时间{/if}</a>
-	<a href="{:url('/main-search-kw-'.$keyword.'-requests-1')}">{if $type == 'requests'}<b>热度</b>{else}热度{/if}</a>
+	<a href="{:url('/search')}?keyword={$keyword}">{if $type == ''}<b>相关度</b>{else}相关度{/if}</a>
+	<a href="{:url('/search')}?keyword={$keyword}&type=length">{if $type == 'length'}<b>文件大小</b>{else}文件大小{/if}</a>
+	<a href="{:url('/search')}?keyword={$keyword}&type=time">{if $type == 'time'}<b>创建时间</b>{else}创建时间{/if}</a>
+	<a href="{:url('/search')}?keyword={$keyword}&type=requests">{if $type == 'requests'}<b>热度</b>{else}热度{/if}</a>
 </div>
 <div id="content">
 	<div id="wall">
@@ -49,7 +49,7 @@
 			<div id="latest-search" class="sidebar-width">
 				<span class="latest-desc">大家对这些感兴趣：</span>
 				{foreach $tags as $item}
-				<span><a href="{:url('/main-search-kw-'.$item['tag'].'-1')}">{$item.tag}</a></span>
+				<span><a href="{:url('/search')}?keyword={$item.tag}">{$item.tag}</a></span>
 				{/foreach}
 			</div>
 		</div>

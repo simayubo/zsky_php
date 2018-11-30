@@ -10,7 +10,7 @@
           <div class="search-item">
                <div id="tags" class="taglist_tag">
                     {foreach $tags as $item}
-                    <span><a href="{:url('/main-search-kw-'.$item['tag'].'-1')}" target="_blank">{$item.tag}</a></span>
+                    <span><a href="{:url('/search')}?keyword={$item.tag}" target="_blank">{$item.tag}</a></span>
                     {/foreach}
                </div>
           </div>

@@ -26,47 +26,26 @@ class Index extends Common
         ]);
     }
 
-    public function test(){
-        $p =  Page::make([1,2,3,4,5], 20, 1, 100, false, [
-            'path' => '/main-search-kw',
-            'query' => [
-                'ssss' => '11211'
-            ]
-        ]);
-        echo $p->render();
-    }
-
     /**
-     * 搜索提交
-     */
-    public function search(){
-        $keyword = $this->request->post('search', '');
-        if (empty($keyword)){
-            $this->redirect('/');
-        }else{
-            $keyword = str_replace([' ', '-', '\\', '(', ')', '@', '|', '~', '&'], '', strip_tags($keyword));
-            $keyword = urlencode($keyword);
-            $this->redirect("/main-search-kw-{$keyword}-1.html");
-        }
-    }
-
-    /**
-     * 搜索结果
-     * @param $keyword
-     * @param string $type
-     * @param int $page
+     * 搜索
      * @return \think\response\View
      * @throws \ErrorException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function searchResult($keyword, $type = '', $page = 1){
+    public function search(){
+
+        $keyword = $this->request->param('keyword', '');
+        $type = $this->request->param('type', '');
+        $page = $this->request->param('page', 1);
 
         if (!empty($keyword)){
             $result = ['total' => 0, 'sec' => 0, 'error' => '', 'warning' => '', 'list' => []];
             $page_size = 20;
             $start = ($page - 1) * $page_size;
+
+            $keyword = filter_keyword($keyword);
 
             $sphinx = new SphinxClient();
             $sphinx->setServer('185.246.85.49', 9312);
@@ -84,6 +63,9 @@ class Index extends Common
             if (empty($ret)){
                 $result['error'] = '服务开小差了，请重试！';
                 $result['list'] = [];
+            }elseif (!empty($ret) && !isset($ret['matches'])){
+                $result['list'] = [];
+                $result['sec'] = $ret['time'] * 1000;
             }else{
                 $result['total'] = $ret['total'];
                 $result['sec'] = $ret['time'] * 1000;
@@ -114,13 +96,14 @@ class Index extends Common
             }
 
             //分页
-            $page_query = ['keyword' => $keyword];
-            if (!empty($type)){
-                $page_query['type'] = $type;
-            }
+            $query = [];
+            if (!empty($keyword)) $query['keyword'] = $keyword;
+            if (!empty($type)) $query['type'] = $type;
+            if (!empty($page)) $query['page'] = $page;
+
             $pages = Page::make(
                 $result['list'], $page_size, $page, $result['total']
-                , false, ['path' => '/main-search-kw', 'query' => $page_query]
+                , false, ['path' => url('/search'), 'query' => $query]
             );
 
             return view('list')->assign(['keyword' => $keyword, 'result' => $result, 'type' => $type, 'page' => $page, 'pages' => $pages, 'tags' => $this->getTags()]);

@@ -42,7 +42,7 @@
                     <div class="panel-header">种子标签</div>
                     <div class="panel-body">
                          {foreach $jieba_name as $item}
-                         <a href="{:url('/main-search-kw-'.$item.'-1')}">{$item}</a>&nbsp;&nbsp;
+                         <a href="{:url('/search')}?keyword={$item}">{$item}</a>&nbsp;&nbsp;
                          {/foreach}
                     </div>
                </div>
