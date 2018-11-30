@@ -113,6 +113,6 @@ class Page extends Bootstrap
             }
         }
 
-        return $url . $this->buildFragment();
+        return $url . $this->buildFragment().'.html';
     }
 }
