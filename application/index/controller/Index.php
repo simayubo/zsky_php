@@ -25,7 +25,7 @@ class Index extends Common
         }else{
             $total = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
             $today = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
-            Cache::set('index_count', ['total' => $total, 'today' => $today], 6);
+            Cache::set('index_count', ['total' => $total, 'today' => $today], 600);
         }
 
         return view()->assign([
