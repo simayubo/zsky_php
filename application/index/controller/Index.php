@@ -164,22 +164,31 @@ class Index extends Common
      * 统计
      */
     private function getCount(){
-        $cache_count = Cache::get('index_count');
-        if (!empty($cache_count)){
-            return [
-                'total' => $cache_count['total'],
-                'today' => $cache_count['today'],
-            ];
-        }else{
-            $total = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0) as rows')->find();
-            $today = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
-            Cache::set('index_count', ['total' => $total['rows'], 'today' => $today], 3000);
+//        $cache_count = Cache::get('index_count');
+//        if (!empty($cache_count)){
+//            return [
+//                'total' => $cache_count['total'],
+//                'today' => $cache_count['today'],
+//            ];
+//        }else{
+//            $total = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0) as rows')->find();
+//            $today = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
+//            Cache::set('index_count', ['total' => $total['rows'], 'today' => $today], 3000);
+//
+//            return [
+//                'total' => $total['rows'],
+//                'today' => $today,
+//            ];
+//        }
 
-            return [
-                'total' => $total['rows'],
-                'today' => $today,
-            ];
-        }
+        $total = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0) as rows')->find();
+        $today = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
+        Cache::set('index_count', ['total' => $total['rows'], 'today' => $today], 3000);
+
+        return [
+            'total' => $total['rows'],
+            'today' => $today,
+        ];
     }
 
     /**
