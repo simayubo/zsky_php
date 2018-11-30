@@ -7,10 +7,10 @@
 	</form>
 </div>
 <div id="sort-bar">
-	<a href="{:url('/main-search-kw-'.$keyword.'-1')}"><b>相关度</b></a>
-	<a href="{:url('/main-search-kw-'.$keyword.'-length-1')}">文件大小</a>
-	<a href="{:url('/main-search-kw-'.$keyword.'-time-1')}">创建时间</a>
-	<a href="{:url('/main-search-kw-'.$keyword.'-requests-1')}">热度</a>
+	<a href="{:url('/main-search-kw-'.$keyword.'-1')}">{if $type == ''}<b>相关度</b>{else}相关度{/if}</a>
+	<a href="{:url('/main-search-kw-'.$keyword.'-length-1')}">{if $type == 'length'}<b>文件大小</b>{else}文件大小{/if}</a>
+	<a href="{:url('/main-search-kw-'.$keyword.'-time-1')}">{if $type == 'time'}<b>创建时间</b>{else}创建时间{/if}</a>
+	<a href="{:url('/main-search-kw-'.$keyword.'-requests-1')}">{if $type == 'requests'}<b>热度</b>{else}热度{/if}</a>
 </div>
 <div id="content">
 	<div id="wall">
