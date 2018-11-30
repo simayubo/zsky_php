@@ -42,7 +42,7 @@ class Index extends Common
         if (empty($keyword)){
             $this->redirect('/');
         }else{
-            $keyword = str_replace([' ', '-', '\\', '(', ')', '@', '|', '~', '&'],'', strip_tags($keyword));
+            $keyword = str_replace([' ', '-', '\\', '(', ')', '@', '|', '~', '&'], '', strip_tags($keyword));
             $this->redirect("/main-search-kw-{$keyword}-1.html");
         }
     }
@@ -67,7 +67,13 @@ class Index extends Common
 
             $sphinx = new SphinxClient();
             $sphinx->setServer('185.246.85.49', 9312);
-            $sphinx->setSortMode(1, 'requests');
+            if ($type == 'length'){
+                $sphinx->setSortMode(1, 'length');
+            }elseif ($type == 'time'){
+                $sphinx->setSortMode(1, 'create_time');
+            }elseif ($type == 'requests'){
+                $sphinx->setSortMode(1, 'requests');
+            }
             $sphinx->setLimits($start, $page_size, 50000);
             $ret = $sphinx->query($keyword);
 
@@ -109,20 +115,10 @@ class Index extends Common
             }
             $pages = Page::make(
                 $result['list'], $page_size, $page, $result['total']
-                , false, [
-                    'path' => '/main-search-kw',
-                    'query' => $page_query
-                ]
+                , false, ['path' => '/main-search-kw', 'query' => $page_query]
             );
 
-            return view('list')->assign([
-                'keyword' => $keyword,
-                'result' => $result,
-                'type' => $type,
-                'page' => $page,
-                'pages' => $pages
-            ]);
-
+            return view('list')->assign(['keyword' => $keyword, 'result' => $result, 'type' => $type, 'page' => $page, 'pages' => $pages, 'search_keywords' => $this->getSearchKeywords()]);
         }else{
             $this->redirect('/');
         }
@@ -138,6 +134,20 @@ class Index extends Common
         }else{
             $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
             Cache::set('index_keywords', $keywords);
+            return $keywords;
+        }
+    }
+
+    /**
+     * 获取搜索历史关键词
+     */
+    private function getSearchKeywords(){
+        $cache_search_keywords = Cache::get('search_keywords');
+        if (!empty($cache_search_keywords)){
+            return $cache_search_keywords;
+        }else{
+            $keywords = Db::name('search_tags')->field('tag')->order('id desc')->select();
+            Cache::set('search_keywords', $keywords);
             return $keywords;
         }
     }
