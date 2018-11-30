@@ -36,6 +36,7 @@ class Index extends Common
         if (empty($keyword)){
             $this->redirect('/');
         }else{
+            $keyword = str_replace([' ', '-', '\\', '(', ')', '@', '|', '~', '&'],'', strip_tags($keyword));
             $this->redirect("/main-search-kw-{$keyword}-1.html");
         }
     }
