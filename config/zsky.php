@@ -3,7 +3,8 @@
 use \think\facade\Env;
 
 return [
-    '' => '',
+    'SPHINX_SERVER' => Env::get('SPHINX_SERVER', '127.0.0.1'),
+    'SPHINX_PORT' => Env::get('SPHINX_PORT', '9312'),
 
     'SITE_TITLE' => Env::get('SITE_TITLE', '网站名称'),
     'SITE_LOGO' => Env::get('SITE_LOGO', '/static/web/logo.png'),

@@ -48,7 +48,7 @@ class Index extends Common
             $keyword = filter_keyword($keyword);
 
             $sphinx = new SphinxClient();
-            $sphinx->setServer('185.246.85.49', 9312);
+            $sphinx->setServer($this->system_config['SPHINX_SERVER'], $this->system_config['SPHINX_PORT']);
             if ($type == 'length'){
                 $sphinx->setSortMode(1, 'length');
             }elseif ($type == 'time'){
