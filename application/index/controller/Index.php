@@ -11,27 +11,15 @@ class Index extends Common
     /**
      * 首页
      * @return \think\response\View
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public function index(){
-        $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
 
-        $cache_count = Cache::get('index_count');
-        if (!empty($cache_count)){
-            $total = $cache_count['total'];
-            $today = $cache_count['today'];
-        }else{
-            $total = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
-            $today = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
-            Cache::set('index_count', ['total' => $total, 'today' => $today], 600);
-        }
+        $keywords = $this->getKeywords();
+        $count = $this->getCount();
 
         return view()->assign([
             'keywords' => $keywords,
-            'total' => $total['rows'],
-            'today' => $today,
+            'count' => $count,
         ]);
     }
 
@@ -62,10 +50,50 @@ class Index extends Common
 
 
 
+
         return view('list')->assign([
             'keyword' => $keyword,
             'type' => $type,
             'page' => $page
         ]);
+    }
+
+
+
+
+    /**
+     * 获取搜索关键词
+     */
+    private function getKeywords(){
+        $cache_keywords = Cache::get('index_keywords');
+        if (!empty($cache_count)){
+            return $cache_keywords;
+        }else{
+            $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
+            Cache::set('index_keywords', $keywords);
+            return $keywords;
+        }
+    }
+
+    /**
+     * 统计
+     */
+    private function getCount(){
+        $cache_count = Cache::get('index_count');
+        if (!empty($cache_count)){
+            return [
+                'total' => $cache_count['total'],
+                'today' => $cache_count['today'],
+            ];
+        }else{
+            $total = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
+            $today = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
+            Cache::set('index_count', ['total' => $total, 'today' => $today], 3000);
+
+            return [
+                'total' => $total,
+                'today' => $today,
+            ];
+        }
     }
 }
