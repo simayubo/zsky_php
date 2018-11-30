@@ -87,4 +87,32 @@ class Page extends Bootstrap
 
         return $this->getPageLinkWrapper($url, $text);
     }
+
+    protected function url($page)
+    {
+        if ($page <= 0) {
+            $page = 1;
+        }
+
+        if (strpos($this->options['path'], '[PAGE]') === false) {
+            $parameters = [$this->options['var_page'] => $page];
+            $path       = $this->options['path'];
+        } else {
+            $parameters = [];
+            $path       = str_replace('[PAGE]', $page, $this->options['path']);
+        }
+
+        if (count($this->options['query']) > 0) {
+            $parameters = array_merge($this->options['query'], $parameters);
+        }
+
+        $url = $path;
+        if (!empty($parameters)) {
+            foreach ($parameters as $key => $item) {
+                $url .= '-' . $parameters[$key];
+            }
+        }
+
+        return $url . $this->buildFragment();
+    }
 }

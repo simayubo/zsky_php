@@ -25,7 +25,12 @@ class Index extends Common
     }
 
     public function test(){
-        $p =  Page::make([1,2,3,4,5], 20, 1, 100);
+        $p =  Page::make([1,2,3,4,5], 20, 1, 100, false, [
+            'path' => '/main-search-kw',
+            'query' => [
+                'ssss' => '11211'
+            ]
+        ]);
         echo $p->render();
     }
 
@@ -63,7 +68,7 @@ class Index extends Common
             $sphinx = new SphinxClient();
             $sphinx->setServer('185.246.85.49', 9312);
             $sphinx->setSortMode(2, 'requests');
-            $sphinx->setLimits($start,$page_size,50000);
+            $sphinx->setLimits($start, $page_size, 50000);
             $ret = $sphinx->query($keyword);
 
             if (empty($ret)){
@@ -88,9 +93,10 @@ class Index extends Common
                 //拼装数组列表
                 $result_list = [];
                 foreach ($ret['matches'] as $item) {
-                    $_files = isset($files_list[$item['attrs']['info_hash']])?$files_list[$item['attrs']['info_hash']]:'[]';
+                    $_files = isset($files_list[$item['attrs']['info_hash']])?$files_list[$item['attrs']['info_hash']]:'';
+
                     $result_list[] = array_merge($item['attrs'], [
-                        'files' => json_decode($_files, true)
+                        'files' => (array)json_decode($_files, true)
                     ]);
                 }
                 $result['list'] = $result_list;
@@ -101,7 +107,15 @@ class Index extends Common
                 'result' => $result,
                 'type' => $type,
                 'page' => $page,
-                'pages' => Page::make($result['list'], $page_size, $page, $result['total'])
+                'pages' => Page::make(
+                    $result['list'], $page_size, $page, $result['total']
+                    , false, [
+                        'path' => '/main-search-kw',
+                        'query' => [
+                            'keyword' => $keyword
+                        ]
+                    ]
+                )
             ]);
 
         }else{
