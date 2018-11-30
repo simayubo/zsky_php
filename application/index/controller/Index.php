@@ -239,10 +239,52 @@ class Index extends Common
         ]);
     }
 
+    /**
+     * 周排行
+     * @return \think\response\View
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function weekhot(){
 
+        $weekhot = Cache::get('weekhot');
+        if (empty($weekhot)){
+            $week_time = date('Y-m-d', strtotime('this week Monday'));
+            $weekhot = Db::name('search_hash')->where('create_time', '>', $week_time)->order('requests desc')->limit(50)->select();
+            if (empty($weekhot)) {
+                $weekhot = [];
+            }else{
+                Cache::set('weekhot', $weekhot, 36000);
+            }
+        }
 
-        return view();
+        return view()->assign([
+            'weekhot' => $weekhot
+        ]);
+    }
+
+    /**
+     * 最新
+     * @return \think\response\View
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function news(){
+
+        $news_list = Cache::get('news_list');
+        if (empty($news_list)){
+            $news_list = Db::name('search_hash')->order('id desc')->limit(50)->select();
+            if (empty($news_list)) {
+                $news_list = [];
+            }else{
+                Cache::set('news_list', $news_list, 1800);
+            }
+        }
+        return view('new')->assign([
+            'news_list' => $news_list
+        ]);
     }
 
 

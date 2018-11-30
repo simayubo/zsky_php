@@ -11,14 +11,14 @@
                <span>TOP50:</span>
           </div>
           <div class="search-item">
-              加工中
                <ol>
-
-                    <!--<li>-->
-                         <!--<div class="item-title">-->
-                              <!--<a href="{{url_for('detail',info_hash=hash.info_hash)}}" target="_blank">{{hash.name}}</a><span class="cpill blue-pill">{{hash.requests}}<span>-->
-<!--</span></span></div>-->
-                    <!--</li>-->
+                   {foreach $weekhot as $item}
+                   <li>
+                       <div class="item-title">
+                           <a href="{:url('/hash/'.$item['info_hash'])}" target="_blank">{$item.name}</a><span class="cpill blue-pill">{$item.requests}<span>
+</span></span></div>
+                   </li>
+                   {/foreach}
                </ol>
           </div>
      </div>

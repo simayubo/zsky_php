@@ -17,3 +17,4 @@ Route::get('/main-search-kw-:keyword-:page', 'index/index/searchResult');
 Route::get('/hash/:hash', 'index/index/detail');
 Route::get('/tag', 'index/index/tag');
 Route::get('/weekhot', 'index/index/weekhot');
+Route::get('/new', 'index/index/news');
