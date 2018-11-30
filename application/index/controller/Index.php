@@ -2,6 +2,7 @@
 namespace app\index\controller;
 
 use app\common\controller\Common;
+use Sphinx\SphinxClient;
 use think\Db;
 
 class Index extends Common
@@ -14,14 +15,26 @@ class Index extends Common
      * @throws \think\exception\DbException
      */
     public function index(){
-        $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
+//        $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
+
+//        $sphinx = new SphinxClient();
+//        $sphinx->host = '185.246.85.49';
+//        $sphinx->port = '9312';
+
+//        dump($sphinx->status());
+//        dump($sphinx->query('11'));
 
         $count = Db::name('search_hash')->count();
         dump($count);
 
-        return view()->assign([
-            'keywords' => $keywords
-        ]);
+//        return view()->assign([
+//            'keywords' => $keywords
+//        ]);
+    }
+
+    public function test(){
+        $count = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
+        dump($count);
     }
 
     /**
