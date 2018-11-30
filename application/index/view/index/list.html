@@ -1,11 +1,4 @@
-<div class="header-div">
-	<form class="search-form"  action="{:url('/search')}" method="POST">
-		<a href="/" ><img src="{$system_config.SITE_LOGO_NAV}"  class="nav-logo"/></a>
-		{:token()}
-		<input id="search" name="search" placeholder="搜索电影,软件,图片,资料,番号...." type="text" value="{$keyword}">
-		<input class="blue" id="btnSearch" name="submit" type="submit" value="搜索">
-	</form>
-</div>
+{include file='common/search' /}
 <div id="sort-bar">
 	<a href="{:url('/main-search-kw-'.$keyword.'-1')}">{if $type == ''}<b>相关度</b>{else}相关度{/if}</a>
 	<a href="{:url('/main-search-kw-'.$keyword.'-length-1')}">{if $type == 'length'}<b>文件大小</b>{else}文件大小{/if}</a>
@@ -27,7 +20,7 @@
 			{foreach $result.list as $item}
 			<div class="search-item detail-width">
 				<div class="item-title">
-					<h3><a title="{$item.name}" href="{{url_for('detail',info_hash=hash.info_hash)}}" target="_blank">{:str_replace($keyword, '<b>'.$keyword.'</b>', $item.name)}</a></h3>
+					<h3><a title="{$item.name}" href="{:url('/hash/'.$item['info_hash'])}" target="_blank">{:str_replace($keyword, '<b>'.$keyword.'</b>', $item.name)}</a></h3>
 				</div>
 				<div class="item-list">
 					<ul>

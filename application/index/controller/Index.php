@@ -76,6 +76,7 @@ class Index extends Common
             }
             $sphinx->setLimits($start, $page_size, 50000);
             $ret = $sphinx->query($keyword);
+            $sphinx->close();
 
             if (empty($ret)){
                 $result['error'] = '服务开小差了，请重试！';
@@ -191,8 +192,49 @@ class Index extends Common
     /**
      * 详情
      * @param $hash
+     * @return void
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function detail($hash){
+        if (empty($hash)){
+            return $this->redirect('/');
+        }
+        $info = Db::name('search_hash')->alias('a')
+            ->field('a.*, b.file_list')
+            ->leftJoin('search_filelist b', 'a.info_hash = b.info_hash')
+            ->where('a.info_hash', $hash)
+            ->find();
+        if (empty($info)){
+            return $this->redirect('/');
+        }
+        $files = json_decode($info['file_list'], true);
+        if (empty($files)){
+            $files = [];
+        }
 
+        return view()->assign([
+            'info' => $info,
+            'files' => $files,
+        ]);
     }
+
+    /**
+     * 标签
+     * @return \think\response\View
+     */
+    public function tag(){
+
+
+        return view();
+    }
+
+    public function weekhot(){
+
+
+        return view();
+    }
+
+
 }

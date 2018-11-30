@@ -1,0 +1,8 @@
+<div class="header-div">
+    <form class="search-form"  action="{:url('/search')}" method="POST">
+        <a href="/" ><img src="{$system_config.SITE_LOGO_NAV}"  class="nav-logo"/></a>
+        {:token()}
+        <input id="search" name="search" placeholder="搜索电影,软件,图片,资料...." type="text">
+        <input class="blue" id="btnSearch" name="submit" type="submit" value="搜索">
+    </form>
+</div>

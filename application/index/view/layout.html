@@ -15,8 +15,8 @@
 <body>
 <div id="wrapper">
     <div class="top-bar"><span class="first"><a href="/">种子搜索</a></span>
-        <span><a href="{{url_for('tag')}}">标签</a></span>
-        <span><a href="{{url_for('weekhot')}}">排行</a></span>
+        <span><a href="{:url('/tag')}">标签</a></span>
+        <span><a href="{:url('/weekhot')}">排行</a></span>
     </div>
     {__CONTENT__}
     <div class="push"></div>

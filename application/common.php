@@ -90,5 +90,5 @@ function count_size($bit){
     {
         $bit/=1024;
     }
-    return (floor($bit*100)/100).$type[$i];//floor是取整函数，为了防止出现一串的小数，这里取了两位小数
+    return round((($bit*100)/100), 2).$type[$i];//floor是取整函数，为了防止出现一串的小数，这里取了两位小数
 }
