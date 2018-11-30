@@ -106,7 +106,14 @@ class Index extends Common
                 , false, ['path' => url('/search'), 'query' => $query]
             );
 
-            return view('list')->assign(['keyword' => $keyword, 'result' => $result, 'type' => $type, 'page' => $page, 'pages' => $pages, 'tags' => $this->getTags()]);
+            return view('list')->assign([
+                'keyword' => $keyword,
+                'result' => $result,
+                'type' => $type,
+                'pages' => $pages,
+                'tags' => $this->getTags(),
+                'title' => $keyword.' - 搜索结果(第'.$page.'页)'
+            ]);
         }else{
             $this->redirect('/');
         }
@@ -207,7 +214,8 @@ class Index extends Common
         return view()->assign([
             'info' => $info,
             'files' => $files,
-            'jieba_name' => $jieba_name
+            'jieba_name' => $jieba_name,
+            'title' => $info['name']
         ]);
     }
 
@@ -218,7 +226,8 @@ class Index extends Common
     public function tag(){
 
         return view()->assign([
-            'tags' => $this->getTags()
+            'tags' => $this->getTags(),
+            'title' => '标签'
         ]);
     }
 
@@ -243,7 +252,8 @@ class Index extends Common
         }
 
         return view()->assign([
-            'weekhot' => $weekhot
+            'weekhot' => $weekhot,
+            'title' => '周排行'
         ]);
     }
 
@@ -266,7 +276,8 @@ class Index extends Common
             }
         }
         return view('new')->assign([
-            'news_list' => $news_list
+            'news_list' => $news_list,
+            'title' => '最新'
         ]);
     }
 

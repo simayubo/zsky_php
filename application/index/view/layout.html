@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>{$system_config.SITE_TITLE}</title>
+    <title>{if !empty($title)}{$title} - {/if}{$system_config.SITE_TITLE}</title>
     <meta name="keywords" content="{$system_config.SITE_KEYWORDS}"/>
     <meta name="description" content="{$system_config.SITE_DESCRIPTION}"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
