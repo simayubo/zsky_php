@@ -4,6 +4,7 @@ namespace app\index\controller;
 use app\common\controller\Common;
 use Sphinx\SphinxClient;
 use think\Db;
+use think\facade\Cache;
 
 class Index extends Common
 {
@@ -15,15 +16,23 @@ class Index extends Common
      * @throws \think\exception\DbException
      */
     public function index(){
-//        $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
-//        $count = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
-        $total = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count();
-        var_dump($total);
+        $keywords = Db::name('search_keywords')->field('keyword')->order('order asc')->select();
 
-//        return view()->assign([
-//            'keywords' => $keywords,
-//            'rows' => $count['rows']
-//        ]);
+        $cache_count = Cache::get('index_count');
+        if (!empty($cache_count)){
+            $total = $cache_count['total'];
+            $today = $cache_count['today'];
+        }else{
+            $total = Db::name('search_hash')->field('ifnull(max(id),0)-ifnull(min(id),0)+1 as rows')->find();
+            $today = Db::name('search_hash')->where('create_time', '>', date('Y-m-d'))->count('id');
+            Cache::set('index_count', ['total' => $total, 'today' => $today], 6);
+        }
+
+        return view()->assign([
+            'keywords' => $keywords,
+            'total' => $total['rows'],
+            'today' => $today,
+        ]);
     }
 
     public function test(){
