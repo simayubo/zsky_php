@@ -55,10 +55,14 @@ class Index extends Common
 
         $result = ['total' => 0, 'sec' => 0, 'error' => '', 'warning' => '', 'list' => []];
         if (!empty($keyword)){
+
+            $page_size = 20;
+            $start = ($page - 1) * $page_size;
+
             $sphinx = new SphinxClient();
             $sphinx->setServer('185.246.85.49', 9312);
             $sphinx->setSortMode(2, 'requests');
-            $sphinx->setLimits(0,20,50000);
+            $sphinx->setLimits($start,$page_size,50000);
             $ret = $sphinx->query($keyword);
 
             if (empty($ret)){
