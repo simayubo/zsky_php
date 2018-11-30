@@ -2,7 +2,7 @@
 	<form class="search-form"  action="{:url('/search')}" method="POST">
 		<a href="/" ><img src="{$system_config.SITE_LOGO_NAV}"  class="nav-logo"/></a>
 		{:token()}
-		<input id="search" name="search" placeholder="搜索电影,软件,图片,资料,番号...." type="text" value="毒液">
+		<input id="search" name="search" placeholder="搜索电影,软件,图片,资料,番号...." type="text" value="{$keyword}">
 		<input class="blue" id="btnSearch" name="submit" type="submit" value="搜索">
 	</form>
 </div>
@@ -15,36 +15,37 @@
 <div id="content">
 	<div id="wall">
 		<div class="search-statu">
-			<span>共找到 {{counts}} 条关于 {{query}} 的结果, 耗时 {{(taketime*1000)|int}} 毫秒</span>
-
+			<span>共找到 {$result.total} 条关于 {$keyword} 的结果, 耗时 {$result.sec} 毫秒</span>
 		</div>
 		<div class="adsense" style="position:relative"></div>
 		<div class="col-md-8">
-			{% for hash in hashs %}
+			{foreach $result.list as $item}
 			<div class="search-item detail-width">
 				<div class="item-title">
-					<h3><a title="{{ hash.name }}" href="{{url_for('detail',info_hash=hash.info_hash)}}" target="_blank">{{ hash.name|replace(query, '<b>\\1</b>')|safe }}</a></h3>
+					<h3><a title="{$item.name}" href="{{url_for('detail',info_hash=hash.info_hash)}}" target="_blank">{:str_replace($keyword, '<b>'.$keyword.'</b>', $item.name)}</a></h3>
 				</div>
 				<div class="item-list">
 					<ul>
-						{%for f in (hash.info_hash|filelist)[:10]%}
-						<li>{{f['path']|replace(query, '<b>\\1</b>')|safe}}&nbsp;<span class="lightColor">{{ f['length']|filesizeformat }}</span></li>
-						{% endfor %}
+						{foreach $item['files'] as $_item}
+						<li>{:str_replace($keyword, '<b>'.$keyword.'</b>', $_item['path'])}&nbsp;<span class="lightColor">{$_item.length}</span></li>
+						{/foreach}
 					</ul>
 				</div>
 				<div class="item-bar">
-					<span class="cpill fileType1">{{hash['category']}}</span>
-					<span>创建时间：<b>{{ hash['create_time']|todate }}</b></span>
+					<span class="cpill fileType1">{$item.category}</span>
+					<span>创建时间：<b>{$item.create_time}</b></span>
 					<span>文件大小：
-{% if hash['length']>1073741824 %}
-<b class="cpill yellow-pill">{{(hash['length']/1073741824)|round(2)}}G</b>
-{% else %}<b class="cpill blue-pill">{{(hash['length']/1048576)|round(2)}}M</b>
-{%endif%}</span>
-					<span>热度：<b>{{hash['requests']}}</b></span>
-					<span><img src="{{ url_for('static', filename='img/link.png') }}"  /><a href="magnet:?xt=urn:btih:{{hash['info_hash'] | upper}}" >磁力链接</a></span>
+{if $item['length'] > 1073741824}
+<b class="cpill yellow-pill">{:round($item['length']/1073741824, 2)}G</b>
+{else}<b class="cpill blue-pill">{:round($item['length']/1048576, 2)}M</b>
+{/if}</span>
+					<span>热度：<b>{$item.requests}</b></span>
+					<span><img src="__web__/img/link.png"  /><a href="magnet:?xt=urn:btih:{:strtoupper($item['info_hash'])}" >磁力链接</a></span>
 				</div>
 			</div>
-			{% endfor %}
+			{/foreach}
+
+
 			<div class="bottom-pager detail-width">
 
 				{%if pages<10%}

@@ -64,7 +64,7 @@ class Index extends Common
             if (empty($ret)){
                 $result['list'] = [];
             }else{
-                $result['total'] = $ret['total_found'];
+                $result['total'] = $ret['total'];
                 $result['sec'] = $ret['time'] * 1000;
                 $result['error'] = $ret['error'];
                 $result['warning'] = $ret['warning'];
@@ -90,12 +90,11 @@ class Index extends Common
                 }
                 $result['list'] = $result_list;
             }
-
         }
-        dump($result);exit();
 
         return view('list')->assign([
             'keyword' => $keyword,
+            'result' => $result,
             'type' => $type,
             'page' => $page
         ]);
