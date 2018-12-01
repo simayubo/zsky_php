@@ -16,3 +16,4 @@ Route::get('/hash/:hash', 'index/index/detail');
 Route::get('/tag', 'index/index/tag');
 Route::get('/weekhot', 'index/index/weekhot');
 Route::get('/new', 'index/index/news');
+Route::get('/404', 'index/error/err404');
