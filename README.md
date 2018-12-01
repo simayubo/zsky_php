@@ -8,6 +8,8 @@
 4. 所有配置均在 `.env` 文件中
 5. 首页统计、搜索词、标签、周排行、最新列表 都做了不定期文件缓存，删除 `runtime/cache` 文件夹即可清除缓存 
 6. 建议把 `search_hash` 表 `create_time`和`requests`字段 增加索引
+7. 不要忘记了给权限 
+`chmod -R 777 ./*`，`chown www:www ./*`(如果你的运行用户组是www:www)
 
 ### 安装方法
 
