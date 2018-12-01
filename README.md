@@ -19,6 +19,7 @@
 `composer install`
 4. 修改配置：
 将`.env.dev`文件修改为`.env`，并修改其中参数
+5. 配置apache或nginx根目录指向`public`文件夹
 
 ！简单搞了下，方便一个后端，多个前端哈 ！
 
