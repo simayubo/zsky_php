@@ -20,6 +20,24 @@
 4. 修改配置：
 将`.env.dev`文件修改为`.env`，并修改其中参数
 5. 配置apache或nginx根目录指向`public`文件夹
-
-！简单搞了下，方便一个后端，多个前端哈 ！
+6. 配置伪静态：
+  - Nginx:
+  ```
+  location / {
+  	if (!-e $request_filename){
+  		rewrite  ^(.*)$  /index.php?s=$1  last;   break;
+  	}
+  }
+  ```
+  - Apache:
+  ```apacheconfig
+    <IfModule mod_rewrite.c>
+      Options +FollowSymlinks -Multiviews
+      RewriteEngine On
+    
+      RewriteCond %{REQUEST_FILENAME} !-d
+      RewriteCond %{REQUEST_FILENAME} !-f
+      RewriteRule ^(.*)$ index.php?/$1 [QSA,PT,L]
+    </IfModule>
+  ```
 
